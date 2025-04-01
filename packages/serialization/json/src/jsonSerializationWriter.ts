@@ -7,6 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { DateOnly, Duration, type Guid, isUntypedNode, type ModelSerializerFunction, type Parsable, type SerializationWriter, TimeOnly, type UntypedNode, isUntypedBoolean, isUntypedString, isUntypedNull, isUntypedNumber, isUntypedObject, isUntypedArray, inNodeEnv } from "@microsoft/kiota-abstractions";
+import { convertDateToISO8601WithTimezone } from "../utils/dateUtils";
 
 export class JsonSerializationWriter implements SerializationWriter {
 	public writeByteArrayValue(key?: string, value?: ArrayBuffer | null): void {
@@ -77,7 +78,7 @@ export class JsonSerializationWriter implements SerializationWriter {
 			key && this.writer.push(JsonSerializationWriter.propertySeparator);
 		}
 	};
-	public writeDateValue = (key?: string, value?: Date | null): void => this.writeStringValue(key, value === null ? null : value?.toISOString());
+	public writeDateValue = (key?: string, value?: Date | null): void => this.writeStringValue(key, value === null ? null : convertDateToISO8601WithTimezone(value));
 	public writeDateOnlyValue = (key?: string, value?: DateOnly | null): void => this.writeStringValue(key, value === null ? null : value?.toString());
 	public writeTimeOnlyValue = (key?: string, value?: TimeOnly | null): void => this.writeStringValue(key, value === null ? null : value?.toString());
 	public writeDurationValue = (key?: string, value?: Duration | null): void => this.writeStringValue(key, value === null ? null : value?.toString());

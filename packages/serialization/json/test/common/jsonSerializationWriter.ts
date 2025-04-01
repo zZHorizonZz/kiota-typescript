@@ -355,4 +355,11 @@ describe("JsonParseNode", () => {
 		assert.isTrue("testUnionObject" in result);
 		assert.equal(JSON.stringify(result["testUnionObject"]), JSON.stringify(barResponse));
 	});
+
+	it("Test convertDateToISO8601WithTimezone function", async () => {
+		const testDate = new Date("2023-08-30T12:34:56.789Z");
+		const expectedDateString = "2023-08-30T12:34:56+00:00";
+		const actualDateString = convertDateToISO8601WithTimezone(testDate);
+		assert.equal(actualDateString, expectedDateString);
+	});
 });

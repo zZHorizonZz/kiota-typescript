@@ -7,6 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { inNodeEnv, type DateOnly, type Duration, type Guid, type ModelSerializerFunction, type Parsable, type SerializationWriter, type TimeOnly } from "@microsoft/kiota-abstractions";
+import { convertDateToISO8601WithTimezone } from "../utils/dateUtils";
 
 export class TextSerializationWriter implements SerializationWriter {
 	public writeByteArrayValue(key?: string, value?: ArrayBuffer | null): void {
@@ -59,42 +60,10 @@ export class TextSerializationWriter implements SerializationWriter {
 			this.writeStringValue(key, `"${value}"`);
 		}
 	};
-	public writeDateValue = (key?: string, value?: Date | null): void => {
-		if (value === null) {
-			return this.writeNullValue(key);
-		}
-
-		if (value) {
-			this.writeStringValue(key, `"${value.toISOString()}"`);
-		}
-	};
-	public writeDateOnlyValue = (key?: string, value?: DateOnly | null): void => {
-		if (value === null) {
-			return this.writeNullValue(key);
-		}
-
-		if (value) {
-			this.writeStringValue(key, `"${value.toString()}"`);
-		}
-	};
-	public writeTimeOnlyValue = (key?: string, value?: TimeOnly | null): void => {
-		if (value === null) {
-			return this.writeNullValue(key);
-		}
-
-		if (value) {
-			this.writeStringValue(key, `"${value.toString()}"`);
-		}
-	};
-	public writeDurationValue = (key?: string, value?: Duration | null): void => {
-		if (value === null) {
-			return this.writeNullValue(key);
-		}
-
-		if (value) {
-			this.writeStringValue(key, `"${value.toString()}"`);
-		}
-	};
+	public writeDateValue = (key?: string, value?: Date | null): void => this.writeStringValue(key, value === null ? null : convertDateToISO8601WithTimezone(value));
+	public writeDateOnlyValue = (key?: string, value?: DateOnly | null): void => this.writeStringValue(key, value === null ? null : value?.toString());
+	public writeTimeOnlyValue = (key?: string, value?: TimeOnly | null): void => this.writeStringValue(key, value === null ? null : value?.toString());
+	public writeDurationValue = (key?: string, value?: Duration | null): void => this.writeStringValue(key, value === null ? null : value?.toString());
 	public writeNullValue = (key?: string): void => {
 		this.writeStringValue(key, `null`);
 	};
